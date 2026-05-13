@@ -670,7 +670,7 @@ const SUSPENDED_STATES = {
 document.getElementById('headerDate').textContent = PRICES_AS_OF;
 
 // Set the GitHub Pages URL here to include it in shared content (optional)
-const SHARE_URL = '';
+const SHARE_URL = 'https://bipartisanpolicy.org/explainer/gas-tax-holiday-calculator/';
 let R = {}; // populated in showResults(); used by share functions
 
 const S = { locType:'state', state:'US Average', customPrice:null, customPrewarPrice:null, fuel:'regular', vehicleType:null, customGallons:null, pt:'high', stateTaxOpt:'none' };
@@ -999,10 +999,8 @@ function downloadShareImage() {
 }
 function buildShareText() {
   const warAmt = R.isRange ? fmtRange(R.warCostLow,R.warCostHigh) : fmt(R.warCostSingle);
-  const savAmt = R.isRange ? fmtRange(R.dispSavLow,R.dispSavHigh) : fmt(R.dispSavSingle);
   const loc = R.locLabel === 'Your Price' ? 'my area' : R.locLabel;
-  const holiday = R.hasState ? 'federal + state gas tax holiday' : 'federal gas tax holiday';
-  let text = `The war in Iran is costing me ${warAmt} extra per fill-up in ${loc}. A ${holiday} could save me ${savAmt} per tank.`;
+  let text = `According to BPC's gas tax calculator, the recent increase in gas prices is costing me ${warAmt} extra per fill-up in ${loc}.`;
   if (SHARE_URL) text += '\n' + SHARE_URL;
   return text;
 }
