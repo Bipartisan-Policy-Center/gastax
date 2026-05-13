@@ -925,17 +925,6 @@ function showResults() {
       ${stateChip}
     </div>
     ${customNote}${stateAvgNote}
-    <div class="result-box war">
-      <div class="r-icon">📈</div><div class="r-label">War cost increase per fill-up</div>
-      ${warHTML}
-      <div class="r-desc">Gas is ${fmt(priceIncrease)}/gal more expensive than before the war &nbsp;&middot;&nbsp; ${fmt(nowPrice)}/gal today vs. ${fmt(thenPrice)}/gal on Feb. 26</div>
-    </div>
-    <div class="result-box savings">
-      <div class="r-icon">✂️</div><div class="r-label">${savBoxLabel}</div>
-      ${savHTML}
-      <div class="r-desc">${savDesc}</div>
-    </div>
-    ${breakdownHTML}
     <div class="comparison-wrap">
       <div class="comp-title">Side-by-Side Comparison (per fill-up)</div>
       <div class="comp-row">
@@ -950,6 +939,17 @@ function showResults() {
       </div>
       <div class="comp-note">${compNote}</div>
     </div>
+    <div class="result-box war">
+      <div class="r-icon">📈</div><div class="r-label">War cost increase per fill-up</div>
+      ${warHTML}
+      <div class="r-desc">Gas is ${fmt(priceIncrease)}/gal more expensive than before the war &nbsp;&middot;&nbsp; ${fmt(nowPrice)}/gal today vs. ${fmt(thenPrice)}/gal on Feb. 26</div>
+    </div>
+    <div class="result-box savings">
+      <div class="r-icon">✂️</div><div class="r-label">${savBoxLabel}</div>
+      ${savHTML}
+      <div class="r-desc">${savDesc}</div>
+    </div>
+    ${breakdownHTML}
     <button class="share-results-btn" onclick="openShareModal()">📲 Share My Results</button>
     <button class="restart-btn" onclick="restart()">← Start Over</button>`;
   el.classList.remove('hidden'); $('disclaimer').classList.remove('hidden');
