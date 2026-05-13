@@ -470,7 +470,7 @@
     </div>
     <img id="sharePreview" class="share-preview" alt="Your results snapshot">
     <div class="share-btns">
-      <button class="share-btn share-btn-dl" onclick="downloadShareImage()">💾 Download Image</button>
+      <button class="share-btn share-btn-dl" onclick="downloadShareImage()">💾 Save Image</button>
     </div>
   </div>
 </div>
@@ -991,16 +991,12 @@ function closeShareModal(e) {
 function downloadShareImage() {
   const canvas = $('sharePreview')._canvas;
   if (!canvas) return;
-  canvas.toBlob(function(blob) {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.download = 'gas-tax-savings.png';
-    a.href = url;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-  }, 'image/png');
+  const dataUrl = canvas.toDataURL('image/png');
+  const w = window.open('', '_blank');
+  if (w) {
+    w.document.write('<title>Gas Tax Savings — BPC</title><body style="margin:0;background:#f4f5f7;display:flex;flex-direction:column;align-items:center;padding:32px;min-height:100vh;"><img src="' + dataUrl + '" style="max-width:100%;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.15);"><p style="margin-top:16px;font-family:sans-serif;font-size:13px;color:#64748b;">Right-click → Save image as…</p></body>');
+    w.document.close();
+  }
 }
 function buildShareText() {
   const warAmt = R.isRange ? fmtRange(R.warCostLow,R.warCostHigh) : fmt(R.warCostSingle);
