@@ -471,7 +471,7 @@
     <img id="sharePreview" class="share-preview" alt="Your results snapshot">
     <div class="share-btns">
       <button class="share-btn share-btn-dl" onclick="downloadShareImage()">💾 Download Image</button>
-      <button class="share-btn share-btn-tw hidden" id="nativeShareBtn" onclick="nativeShareImage()">📤 Share Image</button>
+      <button class="share-btn share-btn-tw hidden" id="nativeShareBtn" onclick="nativeShareImage()">📤 Share</button>
     </div>
   </div>
 </div>
@@ -979,9 +979,7 @@ function openShareModal() {
   const img = $('sharePreview');
   try { img.src = canvas.toDataURL('image/png'); } catch(e) { img.src=''; }
   img._canvas = canvas;
-  const testFile = new File([], 'test.png', { type: 'image/png' });
-  const supportsShare = !!(navigator.canShare && navigator.canShare({ files: [testFile] }));
-  $('nativeShareBtn').classList.toggle('hidden', !supportsShare);
+  $('nativeShareBtn').classList.toggle('hidden', !navigator.share);
   $('shareModalOverlay').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
 }
@@ -1010,7 +1008,12 @@ async function nativeShareImage() {
     const res  = await fetch(img.src);
     const blob = await res.blob();
     const file = new File([blob], 'gas-tax-savings.png', { type: 'image/png' });
-    await navigator.share({ title: 'Gas Tax Calculator | BPC', text: buildShareText(), files: [file] });
+    const testFile = new File([], 'test.png', { type: 'image/png' });
+    if (navigator.canShare && navigator.canShare({ files: [testFile] })) {
+      await navigator.share({ title: 'Gas Tax Calculator | BPC', text: buildShareText(), files: [file] });
+    } else {
+      await navigator.share({ title: 'Gas Tax Calculator | BPC', text: buildShareText(), url: SHARE_URL });
+    }
   } catch(e) {
     if (e.name !== 'AbortError') downloadShareImage();
   }
