@@ -468,11 +468,10 @@
       </div>
       <button onclick="closeShareModal()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:#94a3b8;padding:0;line-height:1;margin-left:12px;">✕</button>
     </div>
-    <img id="sharePreview" class="share-preview" alt="Your results snapshot" title="Right-click to save">
-    <p style="text-align:center;font-size:0.78rem;color:#64748b;margin-top:-6px;">
-      <strong>Desktop:</strong> Right-click the image → Save image as&hellip;<br>
-      <strong>Mobile:</strong> Long-press the image → Save to photos
-    </p>
+    <img id="sharePreview" class="share-preview" alt="Your results snapshot">
+    <div class="share-btns">
+      <button class="share-btn share-btn-dl" onclick="downloadShareImage()">💾 Download Image</button>
+    </div>
   </div>
 </div>
 
@@ -995,12 +994,17 @@ function closeShareModal(e) {
 function downloadShareImage() {
   const canvas = $('sharePreview')._canvas;
   if (!canvas) return;
-  const dataUrl = canvas.toDataURL('image/png');
-  const w = window.open('', '_blank');
-  if (w) {
-    w.document.write('<title>Gas Tax Savings — BPC</title><body style="margin:0;background:#f4f5f7;display:flex;flex-direction:column;align-items:center;padding:32px;min-height:100vh;"><img src="' + dataUrl + '" style="max-width:100%;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.15);"><p style="margin-top:16px;font-family:sans-serif;font-size:13px;color:#64748b;">Right-click → Save image as…</p></body>');
-    w.document.close();
-  }
+  canvas.toBlob(function(blob) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'gas-tax-savings.png';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }, 'image/png');
 }
 function buildShareText() {
   const warAmt = R.isRange ? fmtRange(R.warCostLow,R.warCostHigh) : fmt(R.warCostSingle);
