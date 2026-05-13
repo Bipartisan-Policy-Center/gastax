@@ -989,10 +989,16 @@ function closeShareModal(e) {
   }
 }
 function downloadShareImage() {
-  const a = document.createElement('a');
-  a.download = 'gas-tax-savings.png';
-  a.href = $('sharePreview').src;
-  a.click();
+  fetch($('sharePreview').src)
+    .then(res => res.blob())
+    .then(blob => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.download = 'gas-tax-savings.png';
+      a.href = url;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
 }
 function buildShareText() {
   const warAmt = R.isRange ? fmtRange(R.warCostLow,R.warCostHigh) : fmt(R.warCostSingle);
