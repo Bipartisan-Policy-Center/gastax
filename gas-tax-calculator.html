@@ -975,11 +975,14 @@ function restart() {
 
 // ── Share functions ────────────────────────────────────────────
 function openShareModal() {
-  const canvas = generateShareCanvas();
-  const img = $('sharePreview');
-  try { img.src = canvas.toDataURL('image/png'); } catch(e) { img.src=''; }
-  img._canvas = canvas;
-  $('nativeShareBtn').classList.toggle('hidden', !navigator.share);
+  try {
+    const canvas = generateShareCanvas();
+    const img = $('sharePreview');
+    img.src = canvas.toDataURL('image/png');
+    img._canvas = canvas;
+  } catch(e) {
+    $('sharePreview').alt = 'Image preview unavailable in this browser.';
+  }
   $('shareModalOverlay').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
 }
@@ -1022,6 +1025,15 @@ async function nativeShareImage() {
     if (e.name !== 'AbortError') downloadShareImage();
   }
 }
+function rrect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y);
+  ctx.closePath();
+}
 function generateShareCanvas() {
   const W=720, H=400, dpr=2;
   const canvas=document.createElement('canvas');
@@ -1038,7 +1050,7 @@ function generateShareCanvas() {
   ctx.fillStyle=hg; ctx.fillRect(0,0,W,72);
   // Red badge
   ctx.fillStyle='#e43e47';
-  ctx.beginPath(); ctx.roundRect(20,14,134,20,10); ctx.fill();
+  rrect(ctx,20,14,134,20,10); ctx.fill();
   ctx.fillStyle='white'; ctx.font='bold 10px system-ui'; ctx.textAlign='left';
   ctx.fillText('IRAN WAR IMPACT',30,28);
   ctx.fillStyle='white'; ctx.font='bold 19px system-ui';
@@ -1050,7 +1062,7 @@ function generateShareCanvas() {
   if(R.hasState) infoParts.push(ST_OPT_LABELS[R.stOpt]+' incl.');
   let infoStr=infoParts.join('   ·   ');
   while(ctx.measureText(infoStr).width>W-40&&infoParts.length>2){
-    infoParts.pop(); infoStr=infoParts.join('   ·   ')+'   ·   …';
+    infoParts.pop(); infoStr=infoParts.join('   ·   ')+'   ·   ...';
   }
   ctx.fillText(infoStr,20,94);
 
@@ -1058,7 +1070,7 @@ function generateShareCanvas() {
   const cardY=110,cardH=212,gap=18;
   const cardW=(W-40-gap)/2,c1x=20,c2x=20+cardW+gap;
   function drawCard(x,y,w,h,fill,stroke){
-    ctx.beginPath(); ctx.roundRect(x,y,w,h,12);
+    rrect(ctx,x,y,w,h,12);
     ctx.fillStyle=fill; ctx.fill();
     ctx.strokeStyle=stroke; ctx.lineWidth=1.5; ctx.stroke();
   }
