@@ -38,6 +38,7 @@ jobs:
           else
             TODAY=$(date -u +'%B %-d, %Y')
             git commit -m "chore: update gas prices — ${TODAY}"
+            git pull --rebase
             git push
             echo "✅ Committed and pushed updated prices."
           fi
